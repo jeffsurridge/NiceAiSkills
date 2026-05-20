@@ -2,7 +2,7 @@
 name: support-triage
 description: >
   Perform initial bug triage on a customer support ticket from Freescout. Use this skill whenever
-  a user provides a Freescout ticket URL (e.g., https://smile.rymera.com.au/conversation/XXXXX)
+  a user provides a Freescout ticket URL (e.g., https://support.example.com/conversation/XXXXX)
   and wants to triage, investigate, or link it to a GitHub issue. Triggers on phrases like
   "triage this ticket", "check this conversation", "link to GitHub", "investigate this support ticket",
   or any time a Freescout URL is pasted into chat. Automates the full workflow: fetching ticket data,
@@ -21,7 +21,7 @@ maps to relevant GitHub repos, and either links an existing issue or helps debug
 Extract the numeric conversation ID from the provided Freescout URL.
 
 **Example:**
-- Input: `https://smile.rymera.com.au/conversation/14231?folder_id=74`
+- Input: `https://support.example.com/conversation/14231?folder_id=74`
 - Extracted ID: `14231`
 
 ---
@@ -30,14 +30,14 @@ Extract the numeric conversation ID from the provided Freescout URL.
 
 ```bash
 curl -s -H "X-FreeScout-API-Key: $FREESCOUT_API_KEY" \
-  "https://smile.rymera.com.au/api/conversations/{extracted_id}"
+  "https://support.example.com/api/conversations/{extracted_id}"
 ```
 
 Also fetch threads to get the full email body:
 
 ```bash
 curl -s -H "X-FreeScout-API-Key: $FREESCOUT_API_KEY" \
-  "https://smile.rymera.com.au/api/conversations/{extracted_id}/threads"
+  "https://support.example.com/api/conversations/{extracted_id}/threads"
 ```
 
 From the response, extract:
@@ -67,15 +67,15 @@ Then extract **2–4 concise search terms** capturing the core technical issue.
 
 Use the `mailboxId` from Step 2 to determine which GitHub org repos to search:
 
-| mailboxId | Repositories (under org `Rymera-Web-Co`) |
-|-----------|------------------------------------------|
-| `1`  | `storeagent-chat` |
-| `2`  | `woocommerce-store-exporter-deluxe`, `woocommerce-product-importer-deluxe` |
-| `3`  | `woo-product-feed-elite`, `woo-product-feed-pro` |
-| `4`  | `woocommerce-wholesale-prices`, `woocommerce-wholesale-quotes`, `woocommerce-wholesale-order-form`, `woocommerce-wholesale-prices-premium`, `woocommerce-wholesale-lead-capture`, `woocommerce-wholesale-payments` |
-| `5`  | `advanced-coupons-for-woocommerce`, `advanced-gift-cards-for-woocommerce`, `advanced-coupons-for-woocommerce-free`, `loyalty-program-for-woocommerce`, `advanced-promo-kit` |
-| `6`  | `wc-vendors-pro`, `wc-vendors`, `wc-vendors-membership`, `wc-vendors-gateway-stripe-connect`, `wc-vendors-woocommerce-subscriptions`, `wc-vendors-tax`, `wc-vendors-woocommerce-bookings`, `wc-vendors-pro-simple-auctions`, `wc-vendors-signup` |
-| `7`  | `saveto-wishlist-pro-for-woocommerce`, `saveto-wishlist-lite-for-woocommerce` |
+| mailboxId | Repositories (under org `your-org`) |
+|-----------|--------------------------------------|
+| `1`  | `plugin-repo-a` |
+| `2`  | `plugin-repo-b`, `plugin-repo-c` |
+| `3`  | `plugin-repo-d`, `plugin-repo-e` |
+| `4`  | `plugin-repo-f`, `plugin-repo-g`, `plugin-repo-h`, `plugin-repo-i`, `plugin-repo-j`, `plugin-repo-k` |
+| `5`  | `plugin-repo-l`, `plugin-repo-m`, `plugin-repo-n`, `plugin-repo-o`, `plugin-repo-p` |
+| `6`  | `plugin-repo-q`, `plugin-repo-r`, `plugin-repo-s`, `plugin-repo-t`, `plugin-repo-u`, `plugin-repo-v`, `plugin-repo-w`, `plugin-repo-x`, `plugin-repo-y` |
+| `7`  | `plugin-repo-z`, `plugin-repo-aa` |
 
 ---
 
@@ -85,7 +85,7 @@ Search all mapped repositories for open issues matching the extracted terms.
 
 ```bash
 # Search each repo for matching open issues
-gh issue list --repo Rymera-Web-Co/{repo} --state open --search "{search terms}" --limit 10
+gh issue list --repo your-org/{repo} --state open --search "{search terms}" --limit 10
 ```
 
 Run this for each repo in the mapped list. Collect all matching issues.
@@ -95,11 +95,11 @@ Run this for each repo in the mapped list. Collect all matching issues.
 Leave a `+1` comment on the matching GitHub issue using the original ticket URL:
 
 ```bash
-gh issue comment {issue_number} --repo Rymera-Web-Co/{repo} --body "+1 {original_ticket_url}"
+gh issue comment {issue_number} --repo your-org/{repo} --body "+1 {original_ticket_url}"
 ```
 
 Report back to the user:
-> ✅ **Match found:** Linked ticket to [Rymera-Web-Co/{repo}#{issue_number}]({github_issue_url})
+> ✅ **Match found:** Linked ticket to [your-org/{repo}#{issue_number}]({github_issue_url})
 > Comment posted: `+1 {original_ticket_url}`
 
 **Stop here** — do not proceed to Step 6.

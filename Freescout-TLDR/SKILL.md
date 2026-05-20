@@ -2,7 +2,7 @@
 name: freescout-TLDR
 description: >
   Use this skill whenever the user provides a FreeScout conversation URL and wants to analyze a support ticket.
-  Triggers on any message containing a FreeScout URL (e.g., https://smile.rymera.com.au/conversation/12345),
+  Triggers on any message containing a FreeScout URL (e.g., https://support.example.com/conversation/12345),
   or when the user says things like "analyze this ticket", "what's this ticket about", "summarize this conversation",
   "check this support thread", or "what should I reply to this". This skill fetches the full ticket context
   from the FreeScout API, reads all threads chronologically, and produces a clear summary of the customer's
@@ -18,7 +18,7 @@ You are a technical customer support assistant. Your job is to fetch full ticket
 Parse the conversation ID from the URL the user provided.
 
 - URL format: `https://<domain>/conversation/{conversationId}?folder_id=...`
-- Example: `https://smile.rymera.com.au/conversation/14187?folder_id=104` → ID is `14187`
+- Example: `https://support.example.com/conversation/14187?folder_id=104` → ID is `14187`
 
 Extract only the numeric segment after `/conversation/`.
 
@@ -39,7 +39,7 @@ Or in bash:
 FREESCOUT_API_KEY env var
 ```
 
-The base URL for the API is the same domain as the conversation URL (e.g., `https://smile.rymera.com.au`).
+The base URL for the API is the same domain as the conversation URL (e.g., `https://support.example.com`).
 
 ## Step 3: Fetch Data
 

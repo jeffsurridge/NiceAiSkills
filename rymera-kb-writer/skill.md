@@ -26,14 +26,14 @@ Site configuration:
 - Base URL: `https://wholesalesuiteplugin.com`
 - Username env var: `wholesalesuite_application_user`
 - Password env var: `wholesalesuite_application_pass`
-- Reference article ID: `164823`
+- Reference article ID: `YOUR_REFERENCE_ARTICLE_ID`
 - Post type endpoint: `/wp-json/wp/v2/ht-kb`
 
 ### Ad Tribes
 - Base URL: `https://adtribes.io`
 - Username env var: `adtribes_application_username`
 - Password env var: `adtribes_application_password`
-- Reference article ID: `46162`
+- Reference article ID: `YOUR_REFERENCE_ARTICLE_ID`
 - Post type endpoint: `/wp-json/wp/v2/ht-kb`
 
 ---
@@ -246,7 +246,7 @@ AUTH=$(echo -n "$WP_USER:$WP_PASS" | base64)
 
 # Fetch reference article
 curl -s -H "Authorization: Basic $AUTH" \
-  "$BASE_URL/wp-json/wp/v2/ht-kb/164823"
+  "$BASE_URL/wp-json/wp/v2/ht-kb/$REFERENCE_ID"
 
 # Create new draft
 curl -s -X POST \
@@ -260,7 +260,7 @@ curl -s -X PATCH \
   -H "Authorization: Basic $AUTH" \
   -H "Content-Type: application/json" \
   -d '{"content":"<!-- wp:paragraph --><p>Updated</p><!-- /wp:paragraph -->","status":"draft"}' \
-  "$BASE_URL$ENDPOINT/164823"
+  "$BASE_URL$ENDPOINT/$POST_ID"
 ```
 
 ### Ad Tribes
@@ -273,7 +273,7 @@ AUTH=$(echo -n "$WP_USER:$WP_PASS" | base64)
 
 # Fetch reference article
 curl -s -H "Authorization: Basic $AUTH" \
-  "$BASE_URL/wp-json/wp/v2/ht-kb/46162?context=edit"
+  "$BASE_URL/wp-json/wp/v2/ht-kb/$REFERENCE_ID?context=edit"
 
 # Create new draft
 curl -s -X POST \
